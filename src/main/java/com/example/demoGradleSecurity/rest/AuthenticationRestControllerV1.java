@@ -91,7 +91,6 @@ public class AuthenticationRestControllerV1 {
             System.out.println(user.getName()+"xxxxxx");
 
         if(user == null) {
-//            System.out.println("ERROR USER NULL");
             throw new UsernameNotFoundException("User with username: "+ username + " not found!");
         }
 

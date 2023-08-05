@@ -95,8 +95,6 @@ public class AuthenticationRestControllerV1 {
             throw new UsernameNotFoundException("User with username: "+ username + " not found!");
         }
 
-//        System.out.println(user.getName());
-//        System.out.println(user.getPassword());
 
 
         String token = jwtTokenProvider.createToken(username, user.getRoles());

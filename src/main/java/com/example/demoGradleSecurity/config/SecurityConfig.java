@@ -30,7 +30,7 @@ public class SecurityConfig {
                         .requestMatchers(ADMIN_ENDPOINT).permitAll()
                         .anyRequest().authenticated())
                         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // (3)
-                        .httpBasic(Customizer.withDefaults());
+                        .httpBasic(httpBasic -> httpBasic.disable());
           http.addFilterBefore(new JwtTokenFilter(new JwtTokenProvider()), UsernamePasswordAuthenticationFilter.class);
 
           return http.build();

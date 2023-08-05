@@ -30,6 +30,7 @@ public class JwtTokenProvider {
     @Autowired
     private UserDetailsService userDetailsService;
 
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -45,6 +46,9 @@ public class JwtTokenProvider {
         claims.put("roles", getRoleNames(roleList));
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
+
+        System.out.println(secret+"===============");
+        System.out.println(validityInMilliseconds+"===============");
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -73,13 +77,18 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
+            System.out.println("1 "+token);
+            System.out.println(secret);
             Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-
+//            Jws<Claims> claims = Jwts.parser().setSigningKey("testsecurity").parseClaimsJws(token);
+            System.out.println("2");
             if(claims.getBody().getExpiration().before(new Date())) {
                 return false;
             }
+            System.out.println("3");
             return true;
         } catch (JwtException | IllegalArgumentException e) {
+            System.out.println(e);
             throw new JwtAuthenticationException("JWT token is expired or invalid");
         }
     }

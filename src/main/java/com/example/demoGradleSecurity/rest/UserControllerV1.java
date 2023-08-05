@@ -21,15 +21,15 @@ public class UserControllerV1 {
         return userService.getAll();
     }
 
-    @GetMapping("/id")
+    @GetMapping("/{id}")
     public UserEntity getUser(@PathVariable int id) {
         return userService.findById(id);
     }
 
-    @GetMapping("/email")
-    public UserEntity getUser(@PathVariable String email) {
-        return userService.findByEmail(email);
-    }
+//    @GetMapping("/email")
+//    public UserEntity getUser(@PathVariable String email) {
+//        return userService.findByEmail(email);
+//    }
 
     @PostMapping
     public UserEntity addUser(@RequestBody UserEntity user) {
@@ -41,7 +41,7 @@ public class UserControllerV1 {
         return userService.updateUser(user);
     }
 
-    @DeleteMapping("/id")
+    @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable int id) {
         userService.deleteUserById(id);
     }

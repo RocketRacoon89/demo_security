@@ -35,10 +35,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity findByName(String name) {return userRepository.findByName(name);}
 
-    @Override
-    public UserEntity findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
+//    @Override
+//    public UserEntity findByEmail(String email) {
+//        return userRepository.findByEmail(email);
+//    }
 
     @Override
     @Transactional

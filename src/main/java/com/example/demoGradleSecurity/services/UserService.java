@@ -13,7 +13,7 @@ public interface UserService {
 
     UserEntity findByName(String name);
 
-    UserEntity findByEmail(String email);
+//    UserEntity findByEmail(String email);
 
     UserEntity updateUser(UserEntity user);
 

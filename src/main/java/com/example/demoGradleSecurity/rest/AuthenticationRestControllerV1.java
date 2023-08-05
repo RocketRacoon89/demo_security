@@ -82,13 +82,10 @@ public class AuthenticationRestControllerV1 {
 
 
         String username = requestDto.getUsername();
-            System.out.println("1");
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken((Object) username, (Object) requestDto.getPassword()));
-            System.out.println("2");
 
         UserEntity user = userService.findByName(requestDto.getUsername());
-            System.out.println(user.getName()+"xxxxxx");
 
         if(user == null) {
             throw new UsernameNotFoundException("User with username: "+ username + " not found!");
@@ -97,9 +94,6 @@ public class AuthenticationRestControllerV1 {
 
 
         String token = jwtTokenProvider.createToken(username, user.getRoles());
-            System.out.println(token+" TOOOOOOOKEN");
-//        System.out.println(authentication.
-//        getPrincipal());
 
         Map<Object, Object> response = new HashMap<>();
         response.put("username", username);

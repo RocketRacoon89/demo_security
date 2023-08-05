@@ -41,15 +41,10 @@ public class JwtTokenProvider {
     }
 
     public String createToken(String username, List<RoleEntity> roleList) {
-        System.out.println("ENTER TO CREATE");
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("roles", getRoleNames(roleList));
-
-        System.out.println("ENTER TO 2");
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
-
-        System.out.println("ENTER TO 3");
 
         return Jwts.builder()
                 .setClaims(claims)

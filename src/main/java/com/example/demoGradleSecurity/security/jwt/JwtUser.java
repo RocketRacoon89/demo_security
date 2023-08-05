@@ -15,8 +15,6 @@ public class JwtUser implements UserDetails {
     private final Collection<? extends GrantedAuthority> authorities;
 
     public JwtUser(int id, String name, String password, boolean enabled, Collection<? extends GrantedAuthority> authorities) {
-//        System.out.println("JWT user class");
-//        System.out.println(authorities.toString());
         this.id = id;
         this.name = name;
         this.password = password;

@@ -1,19 +1,21 @@
 package com.example.demoGradleSecurity.services;
 
-import com.example.demoGradleSecurity.entity.User;
+import com.example.demoGradleSecurity.entity.UserEntity;
 
 import java.util.List;
 
 public interface UserService {
-    List<User> getAll();
+    List<UserEntity> getAll();
 
-    User saveUser(User user);
+    UserEntity saveUser(UserEntity user);
 
-    User findById(int id);
+    UserEntity findById(int id);
 
-    User findByEmail(String email);
+    UserEntity findByName(String name);
 
-    User updateUser(User user);
+    UserEntity findByEmail(String email);
+
+    UserEntity updateUser(UserEntity user);
 
     void deleteUserById(int id);
 }

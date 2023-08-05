@@ -79,9 +79,7 @@ public class AuthenticationRestControllerV1 {
     public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
 
         try {
-//        System.out.println("1");
-//        System.out.println(requestDto.getUsername());
-//        System.out.println(requestDto.getPassword());
+
 
         String username = requestDto.getUsername();
             System.out.println("1");

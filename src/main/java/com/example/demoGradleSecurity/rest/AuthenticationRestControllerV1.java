@@ -4,23 +4,14 @@ import com.example.demoGradleSecurity.dto.AuthenticationRequestDto;
 import com.example.demoGradleSecurity.entity.UserEntity;
 import com.example.demoGradleSecurity.security.jwt.JwtTokenProvider;
 import com.example.demoGradleSecurity.services.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,7 +74,7 @@ public class AuthenticationRestControllerV1 {
 
         String username = requestDto.getUsername();
 
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken((Object) username, (Object) requestDto.getPassword()));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
 
         UserEntity user = userService.findByName(requestDto.getUsername());
 
@@ -102,7 +93,6 @@ public class AuthenticationRestControllerV1 {
         return ResponseEntity.ok(response);
 
     } catch (AuthenticationException e) {
-            System.out.println(e);
         throw new BadCredentialsException("Invalid username or password "+e);
     }
     }

@@ -5,7 +5,6 @@ import com.example.demoGradleSecurity.repositories.UserRepository;
 import com.example.demoGradleSecurity.security.jwt.JwtUser;
 import com.example.demoGradleSecurity.security.jwt.JwtUserFactory;
 import com.example.demoGradleSecurity.services.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

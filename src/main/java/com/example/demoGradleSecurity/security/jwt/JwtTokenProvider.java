@@ -1,5 +1,6 @@
 package com.example.demoGradleSecurity.security.jwt;
 
+import com.amazonaws.services.dynamodbv2.xspec.S;
 import com.example.demoGradleSecurity.entity.RoleEntity;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,10 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class JwtTokenProvider {
@@ -24,8 +22,14 @@ public class JwtTokenProvider {
     @Value("${jwt.token.secret}")
     private String secret;
 
+    @Value("${jwt.token.refreshSecret}")
+    private String refreshSecret;
+
     @Value("${jwt.token.expired}")
     private long validityInMilliseconds;
+
+    @Value("${jwt.token.refreshexpired}")
+    private long validatyResfreshInMilliSeconds;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -39,6 +43,7 @@ public class JwtTokenProvider {
 
     protected void init() {
         secret = Base64.getEncoder().encodeToString(secret.getBytes());
+        refreshSecret = Base64.getEncoder().encodeToString(refreshSecret.getBytes());
     }
 
     public String createToken(String username, List<RoleEntity> roleList) {
@@ -47,14 +52,25 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 
-        System.out.println(secret+"===============");
-        System.out.println(validityInMilliseconds+"===============");
-
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
                 .setExpiration(validity)
                 .signWith(SignatureAlgorithm.HS256, secret)
+                .compact();
+    }
+
+    public String createRefreshToken(String username, List<RoleEntity> roleList) {
+        Claims claims = Jwts.claims().setSubject(username);
+        claims.put("roles", getRoleNames(roleList));
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + validatyResfreshInMilliSeconds);
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(SignatureAlgorithm.HS256, refreshSecret)
                 .compact();
     }
 
@@ -67,6 +83,14 @@ public class JwtTokenProvider {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
     }
 
+    public String getRefreshUsername(String token) {
+        return Jwts.parser().setSigningKey(refreshSecret).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public List<String> getRoleNames(String token) {
+        return Collections.singletonList(Jwts.parser().setSigningKey(refreshSecret).parseClaimsJws(token).getBody().getSubject());
+    }
+
     public String resolveToken(HttpServletRequest req) {
         String bearerToken = req.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer_")) {
@@ -75,22 +99,40 @@ public class JwtTokenProvider {
         return null;
     }
 
+    public String resolveRefreshToken(HttpServletRequest req) {
+        String bearerToken = req.getHeader("Refresh");
+        if (bearerToken != null && bearerToken.startsWith("Bearer_")) {
+            return bearerToken.substring(7, bearerToken.length());
+        }
+        return null;
+    }
+
     public boolean validateToken(String token) {
         try {
-            System.out.println("1 "+token);
-            System.out.println(secret);
             Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-//            Jws<Claims> claims = Jwts.parser().setSigningKey("testsecurity").parseClaimsJws(token);
-            System.out.println("2");
+
             if(claims.getBody().getExpiration().before(new Date())) {
                 return false;
             }
-            System.out.println("3");
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            System.out.println(e);
-            throw new JwtAuthenticationException("JWT token is expired or invalid");
+//            throw new JwtAuthenticationException("JWT token is expired or invalid");
+            return false;
         }
+    }
+
+    public boolean validateRefreshToken(String token) {
+
+        try {
+        Jws<Claims> claims = Jwts.parser().setSigningKey(refreshSecret).parseClaimsJws(token);
+
+        if(claims.getBody().getExpiration().before(new Date())) {
+            return false;
+        }
+        return true;
+    } catch (JwtException | IllegalArgumentException e) {
+            throw new JwtAuthenticationException("JWT token is expired or invalid");
+    }
     }
 
     private List<String> getRoleNames(List<RoleEntity> userRoles) {

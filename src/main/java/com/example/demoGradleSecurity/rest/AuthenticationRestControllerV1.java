@@ -86,9 +86,12 @@ public class AuthenticationRestControllerV1 {
 
         String token = jwtTokenProvider.createToken(username, user.getRoles());
 
+        String refreshToken = jwtTokenProvider.createRefreshToken(username, user.getRoles());
+
         Map<Object, Object> response = new HashMap<>();
         response.put("username", username);
         response.put("token", token);
+        response.put("refreshToken", refreshToken);
 
         return ResponseEntity.ok(response);
 
@@ -96,4 +99,5 @@ public class AuthenticationRestControllerV1 {
         throw new BadCredentialsException("Invalid username or password "+e);
     }
     }
+
 }

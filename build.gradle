@@ -35,6 +35,13 @@ dependencies {
 	// https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api
 	implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
 
+	implementation 'com.amazonaws:aws-java-sdk:1.12.52'
+
+
+
+
+
+
 
 }
 

@@ -22,6 +22,7 @@ public class SecurityConfig {
 
     private static final String ADMIN_ENDPOINT = "/api/v1/admin/**";
     private static final String LOGIN_ENDPOINT = "/api/v1/auth/login";
+    private static final String REFRESH_ENDPOINT = "/api/v1/auth/refreshToken";
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -30,6 +31,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authz) -> authz
                         .requestMatchers(LOGIN_ENDPOINT).permitAll()
                         .requestMatchers(ADMIN_ENDPOINT).permitAll()
+                        .requestMatchers(REFRESH_ENDPOINT).permitAll()
                         .anyRequest().authenticated())
                         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // (3)
                         .httpBasic(httpBasic -> httpBasic.disable());
